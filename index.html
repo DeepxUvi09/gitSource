@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gitSource</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: rgb(17, 24, 39);
+      color: white;
+    }
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 1rem;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: rgb(79, 70, 229);
+      padding: 1rem;
+      border-radius: 1rem 1rem 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar {
+      width: 3rem;
+      height: 3rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .icon-button {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .icon-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .chat-area {
+      flex: 1;
+      background: rgb(31, 41, 55);
+      padding: 1.5rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .welcome-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+
+    .welcome-text {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .welcome-subtext {
+      font-size: 1.1rem;
+      color: rgb(156, 163, 175);
+    }
+
+    .message {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .message.user-message {
+      justify-content: flex-end;
+    }
+
+    .message.ai-message {
+      justify-content: flex-start;
+    }
+
+    .user-message .message-content {
+      background: rgb(79, 70, 229);
+      border-radius: 1rem;
+      border-top-right-radius: 0;
+      margin-right: 0.5rem;
+    }
+
+    .ai-message .message-content {
+      background: rgb(55, 65, 81);
+      border-radius: 1rem;
+      border-top-left-radius: 0;
+      margin-left: 0.5rem;
+    }
+
+    .message-content {
+      padding: 1rem;
+      max-width: 80%;
+    }
+
+    .user-message .avatar {
+      order: 2;
+    }
+
+    .user-message .message-content {
+      order: 1;
+    }
+
+    .prompt-chips {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .prompt-chip {
+      padding: 0.5rem 1rem;
+      background: rgb(255, 255, 255);
+      border-radius: 999px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .prompt-chip:hover {
+      background: rgb(75, 85, 101);
+    }
+
+    .input-area {
+      background: rgb(31, 41, 55);
+      padding: 1rem;
+      border-radius: 0 0 1rem 1rem;
+      border-top: 1px solid rgb(55, 65, 81);
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: rgb(55, 65, 81);
+      border-radius: 0.75rem;
+    }
+
+    .input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: white;
+      padding: 0.5rem;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .input::placeholder {
+      color: rgb(156, 163, 175);
+    }
+
+    .send-button {
+      padding: 0.5rem;
+      background: rgb(79, 70, 229);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .send-button:hover {
+      background: rgb(67, 56, 202);
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .light-theme {
+      background: #f3f4f6;
+      color: #1f2937;
+    }
+
+    .light-theme .chat-area {
+      background: #ffffff;
+    }
+
+    .light-theme .input-area {
+      background: #ffffff;
+    }
+
+    .light-theme .message.ai-message .message-content {
+      background: #f3f4f6;
+      color: #1f2937;
+    }
+
+    .light-theme .input-container {
+      background: #f3f4f6;
+    }
+
+    .light-theme .input {
+      color: #1f2937;
+    }
+
+    .light-theme .welcome-text {
+      color: #1f2937;
+    }
+
+    .avatar-container {
+      position: relative;
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-upload {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .icon-button {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .icon-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+  </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+          <div class="header-left">
+            <div class="avatar-container">
+              <div class="avatar" id="avatar-preview">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <input type="file" class="avatar-upload" id="avatar-upload" accept="image/*">
+            </div>
+            <div>
+              <h1 class="text-xl font-bold">gitSource</h1>
+              <p class="text-sm opacity-80">– AI that Thinks Beyond.</p>
+            </div>
+          </div>
+    
+      
+      <div class="header-actions">
+        <button class="icon-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </button>
+        <button class="icon-button" id="clear-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="chat-area" id="chat-body">
+      <div class="welcome-container" id="welcome-message">
+        <h1 class="welcome-text">Hello! I'm gitSource, your AI assistant.</h1>
+        <p class="welcome-subtext">How can I help you today?</p>
+      </div>
+    </main>
+
+    <footer class="input-area">
+      <div class="prompt-chips">
+        <button class="prompt-chip">Heya!</button>
+        <button class="prompt-chip">Tell me a joke</button>
+        <button class="prompt-chip">Explain something</button>
+        <button class="prompt-chip">What is Thermodynamics</button>
+        <button class="prompt-chip">Suggest me some anime</button>
+      </div>
+
+      <div class="input-container">
+        <button class="icon-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="22"></line>
+          </svg>
+        </button>
+        <input type="text" class="input" placeholder="Type your message..." id="chat-input">
+        <button class="send-button" id="send-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
