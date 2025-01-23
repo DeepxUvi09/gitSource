@@ -15,6 +15,7 @@ class Chat {
     this.chatBody = document.getElementById('chat-body');
     this.chatInput = document.getElementById('chat-input');
     this.sendButton = document.getElementById('send-button');
+    this.fileUploadButton = document.getElementById('file-upload-button');
     this.welcomeMessage = document.getElementById('welcome-message');
   }
 
@@ -26,6 +27,7 @@ class Chat {
         this.handleFirstMessage();
       }
     });
+    this.fileUploadButton.addEventListener('click', () => this.handleFileUpload());
   }
 
   handleFirstMessage() {
@@ -40,15 +42,30 @@ class Chat {
     }
   }
 
+  handleFileUpload() {
+    const fileInput = document.getElementById('file-upload');
+    fileInput.click();
+    fileInput.addEventListener('change', this.uploadFile);
+  }
+
+  uploadFile(event) {
+    const file = event.target.files[0];
+    if (file) {
+      this.addMessage('user', `Uploaded File: ${file.name}`);
+    }
+  }
+
   async sendMessage() {
     const message = this.chatInput.value.trim();
     if (!message || message.length > CONFIG.MAX_CHARS) return;
 
     this.addMessage('user', message);
     this.chatInput.value = '';
+    this.addTypingIndicator();
 
     try {
       const response = await this.getAIResponse(message);
+      this.removeTypingIndicator();
       if (response) {
         this.addMessage('ai', response);
       } else {
@@ -103,6 +120,19 @@ class Chat {
     messageDiv.appendChild(content);
     this.chatBody.appendChild(messageDiv);
     this.chatBody.scrollTop = this.chatBody.scrollHeight;
+  }
+
+  addTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message ai-message typing-indicator';
+    this.chatBody.appendChild(typingDiv);
+  }
+
+  removeTypingIndicator() {
+    const typingDiv = document.querySelector('.typing-indicator');
+    if (typingDiv) {
+      typingDiv.remove();
+    }
   }
 
   formatMessage(text) {
