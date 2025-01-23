@@ -11,14 +11,24 @@ body {
 }
 
 .chat-container {
-  width: 350px;
+  width: 380px;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 90vh;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .chat-header {
@@ -27,6 +37,7 @@ body {
   text-align: center;
   padding: 15px;
   font-size: 18px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chat-body {
@@ -35,13 +46,27 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .input-container {
   display: flex;
+  flex-direction: column;
   padding: 10px;
   border-top: 1px solid #ddd;
+  background-color: #fff;
 }
 
 #chat-input {
@@ -67,10 +92,33 @@ body {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
 #send-button:hover {
   background-color: #007bb5;
+}
+
+.upload-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#file-upload {
+  display: none;
+}
+
+#file-upload-button {
+  background-color: #dcdcdc;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#file-upload-button:hover {
+  background-color: #b0b0b0;
 }
 
 .message {
@@ -84,7 +132,16 @@ body {
   padding: 10px;
   border-radius: 8px;
   max-width: 80%;
-  transition: all 0.3s ease;
+  animation: fadeInContent 1s ease-in-out;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .user .message-content {
@@ -97,8 +154,8 @@ body {
 }
 
 .avatar {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
 }
 
@@ -108,16 +165,20 @@ body {
   border-radius: 50%;
 }
 
-.welcome-message {
-  display: block;
-  text-align: center;
-  padding: 20px;
+.typing-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
   background-color: #0095f6;
-  color: white;
-  border-radius: 8px;
-  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  animation: typing 1.5s infinite;
 }
 
-.welcome-message h2 {
-  margin: 0;
+@keyframes typing {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
 }
