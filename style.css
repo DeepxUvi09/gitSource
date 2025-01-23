@@ -1,9 +1,11 @@
+/* Global Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #1a1a1a;
   color: #fff;
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #chat-container {
@@ -12,31 +14,42 @@ body {
   height: 100vh;
   max-width: 600px;
   margin: 0 auto;
+  padding: 20px;
+  background-color: #222;
+  border-radius: 20px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: fadeIn 0.6s ease-out;
 }
 
 #chat-body {
   flex-grow: 1;
   overflow-y: auto;
   padding: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .message {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: 15px 0;
+  opacity: 0;
+  animation: fadeInMessage 0.5s forwards;
 }
 
 .message .message-content {
   background-color: #333;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 18px;
+  border-radius: 12px;
   max-width: 75%;
   word-wrap: break-word;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .user-message .message-content {
-  background-color: #2b88d9;
+  background-color: #6a79f7;
   color: white;
+  transform: scale(1.05);
 }
 
 .ai-message .message-content {
@@ -45,95 +58,132 @@ body {
 
 .avatar {
   margin-right: 10px;
+  transition: transform 0.3s ease;
 }
 
 #input-container {
   display: flex;
-  padding: 10px;
-  background-color: #222;
-  border-top: 1px solid #333;
+  padding: 20px;
+  background-color: #333;
+  border-top: 1px solid #444;
+  border-radius: 10px;
 }
 
 #chat-input {
   flex-grow: 1;
-  padding: 10px;
-  background-color: #333;
-  border: 1px solid #444;
+  padding: 12px 18px;
+  background-color: #444;
+  border: 1px solid #555;
   color: white;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+#chat-input:focus {
+  outline: none;
+  border-color: #6a79f7;
+  background-color: #555;
 }
 
 #send-button {
-  background-color: #2b88d9;
+  background-color: #6a79f7;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#send-button:hover {
+  background-color: #5a68e3;
+  transform: scale(1.05);
 }
 
 .icon-button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
-  margin-left: 10px;
+  padding: 12px;
+  margin-left: 15px;
+  transition: transform 0.3s ease;
 }
 
 .icon-button svg {
   fill: white;
+  transition: fill 0.3s ease;
+}
+
+.icon-button:hover svg {
+  fill: #6a79f7;
 }
 
 #clear-button,
 #theme-toggle {
-  background-color: #444;
+  background-color: #555;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 10px;
   margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#clear-button:hover,
+#theme-toggle:hover {
+  background-color: #6a79f7;
+  transform: scale(1.05);
 }
 
 #clear-button {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .prompt-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 0;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .prompt-chip {
-  background-color: #333;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: #444;
+  padding: 12px 20px;
+  border-radius: 20px;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.prompt-chip:hover {
+  transform: scale(1.1);
 }
 
 .welcome-container {
   text-align: center;
-  padding: 20px;
+  padding: 25px;
+  transition: opacity 0.3s ease;
 }
 
 #welcome-message h1 {
-  font-size: 24px;
+  font-size: 28px;
   margin: 0;
+  color: #fff;
 }
 
 #welcome-message p {
   font-size: 18px;
-  margin: 10px 0 0;
+  margin: 12px 0 0;
+  color: #ccc;
 }
 
 #theme-toggle {
-  background-color: #555;
+  background-color: #666;
 }
 
 #theme-toggle:hover {
-  background-color: #666;
+  background-color: #777;
 }
 
 body.light-theme {
@@ -151,7 +201,7 @@ body.light-theme .message .message-content {
 }
 
 body.light-theme .user-message .message-content {
-  background-color: #2b88d9;
+  background-color: #6a79f7;
 }
 
 body.light-theme .ai-message .message-content {
@@ -166,7 +216,7 @@ body.light-theme #chat-input {
 }
 
 body.light-theme #send-button {
-  background-color: #2b88d9;
+  background-color: #6a79f7;
   color: white;
 }
 
@@ -179,4 +229,27 @@ body.light-theme #theme-toggle {
 #avatar-preview img {
   max-width: 100px;
   border-radius: 50%;
+  border: 3px solid #6a79f7;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInMessage {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
