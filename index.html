@@ -3,81 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gitSource</title>
-  <link rel="stylesheet" type="text/css" href="style.css"></head>
+  <title>AI Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <div class="container">
-        <header class="header">
-          <div class="header-left">
-            <div class="avatar-container">
-              <div class="avatar" id="avatar-preview">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                  <line x1="8" y1="21" x2="16" y2="21"></line>
-                  <line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
-              </div>
-              <input type="file" class="avatar-upload" id="avatar-upload" accept="image/*">
-            </div>
-            <div>
-              <h1 class="text-xl font-bold">gitSource</h1>
-              <p class="text-sm opacity-80">– Made with bad intensions by tanmay.</p>
-            </div>
-          </div>
-    
-      
-      <div class="header-actions">
-        <button class="icon-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-        </button>
-        <button class="icon-button" id="clear-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <main class="chat-area" id="chat-body">
-      <div class="welcome-container" id="welcome-message">
-        <h1 class="welcome-text">Hello! I'm gitSource, your AI assistant.</h1>
-        <p class="welcome-subtext">How can I help you today?</p>
-      </div>
-    </main>
-
-    <footer class="input-area">
-      <div class="prompt-chips">
-        <button class="prompt-chip">Heyy!</button>
-        <button class="prompt-chip">Tell me a joke</button>
-        <button class="prompt-chip">Explain something</button>
-        <button class="prompt-chip">What is Thermodynamics</button>
-        <button class="prompt-chip">Suggest me some anime</button>
-      </div>
-
-      <div class="input-container">
-        <button class="icon-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-            <line x1="12" y1="19" x2="12" y2="22"></line>
-          </svg>
-        </button>
-        <input type="text" class="input" placeholder="Type your message..." id="chat-input">
-        <button class="send-button" id="send-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
-      </div>
-    </footer>
+  <div id="chat-container">
+    <div id="chat-body"></div>
+    <div id="input-container">
+      <textarea id="chat-input" placeholder="Type your message here..."></textarea>
+      <button id="send-button">Send</button>
+      <button class="icon-button" id="voice-assistant" title="Voice Assistant">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="22"></line>
+        </svg>
+      </button>
+    </div>
+    <button id="clear-button">Clear Chat</button>
+    <button id="theme-toggle">Toggle Theme</button>
+    <div class="prompt-chips">
+      <div class="prompt-chip">Hello</div>
+      <div class="prompt-chip">How are you?</div>
+      <!-- Add more prompt chips here -->
+    </div>
+    <div id="welcome-message">
+      <h1>Hello! I'm your AI Assistant.</h1>
+      <p>How can I help you today?</p>
+    </div>
   </div>
-
+  <input type="file" id="avatar-upload" accept="image/*" />
+  <div id="avatar-preview"></div>
+  
   <script src="app.js"></script>
 </body>
 </html>
