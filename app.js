@@ -8,29 +8,17 @@ class Chat {
   constructor() {
     this.setupElements();
     this.setupListeners();
-    this.loadTheme();
     this.loadAvatar();
-    this.setupVoiceAssistant(); // Initialize voice assistant
   }
 
   setupElements() {
     this.chatBody = document.getElementById('chat-body');
     this.chatInput = document.getElementById('chat-input');
     this.sendButton = document.getElementById('send-button');
-    this.themeToggle = document.getElementById('theme-toggle');
-    this.promptChips = document.querySelectorAll('.prompt-chip');
     this.welcomeMessage = document.getElementById('welcome-message');
-    this.clearButton = document.getElementById('clear-button');
-    this.avatarUpload = document.getElementById('avatar-upload');
-    this.avatarPreview = document.getElementById('avatar-preview');
-    this.voiceAssistantButton = document.getElementById('voice-assistant'); // Voice assistant button
   }
 
   setupListeners() {
-    if (this.avatarUpload) {
-      this.avatarUpload.addEventListener('change', (e) => this.handleAvatarUpload(e));
-    }
-
     this.sendButton.addEventListener('click', () => this.handleFirstMessage());
     this.chatInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -38,64 +26,6 @@ class Chat {
         this.handleFirstMessage();
       }
     });
-
-    this.promptChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        this.chatInput.value = chip.textContent;
-        this.handleFirstMessage();
-      });
-    });
-
-    this.clearButton.addEventListener('click', () => this.clearChat());
-    this.themeToggle.addEventListener('click', () => this.toggleTheme());
-
-    if (this.voiceAssistantButton) {
-      this.voiceAssistantButton.addEventListener('click', () => this.startVoiceRecognition());
-    }
-  }
-
-  setupVoiceAssistant() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      console.warn('Speech Recognition API not supported in this browser.');
-      if (this.voiceAssistantButton) {
-        this.voiceAssistantButton.disabled = true;
-      }
-      return;
-    }
-
-    this.recognition = new SpeechRecognition();
-    this.recognition.lang = 'en-US';
-    this.recognition.continuous = false;
-
-    this.recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript.trim();
-      this.chatInput.value = transcript;
-      console.log('Voice recognized:', transcript);
-      this.handleFirstMessage();
-    };
-
-    this.recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      this.addMessage('ai', 'I couldn’t process your voice command. Please try again.');
-    };
-
-    this.recognition.onend = () => {
-      if (this.voiceAssistantButton) {
-        this.voiceAssistantButton.classList.remove('listening');
-      }
-      console.log('Voice recognition stopped.');
-    };
-  }
-
-  startVoiceRecognition() {
-    if (!this.recognition) return;
-
-    this.recognition.start();
-    if (this.voiceAssistantButton) {
-      this.voiceAssistantButton.classList.add('listening');
-    }
-    console.log('Voice recognition started...');
   }
 
   handleFirstMessage() {
@@ -103,37 +33,10 @@ class Chat {
       this.welcomeMessage.classList.add('fade-out');
       setTimeout(() => {
         this.welcomeMessage.remove();
-        this.welcomeMessage = null;
         this.sendMessage();
       }, 500);
     } else {
       this.sendMessage();
-    }
-  }
-
-  handleAvatarUpload(event) {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const avatarData = e.target.result;
-        localStorage.setItem('userAvatar', avatarData);
-        this.updateAvatarPreview(avatarData);
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  updateAvatarPreview(avatarData) {
-    if (this.avatarPreview) {
-      this.avatarPreview.innerHTML = `<img src="${avatarData}" alt="User Avatar">`;
-    }
-  }
-
-  loadAvatar() {
-    const savedAvatar = localStorage.getItem('userAvatar');
-    if (savedAvatar) {
-      this.updateAvatarPreview(savedAvatar);
     }
   }
 
@@ -194,24 +97,10 @@ class Chat {
 
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    
-    if (sender === 'user') {
-      const savedAvatar = localStorage.getItem('userAvatar');
-      avatar.innerHTML = savedAvatar
-        ? `<img src="${savedAvatar}" alt="User Avatar">`
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
-    } else {
-      avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
-    }
+    avatar.innerHTML = sender === 'user' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>` : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
 
-    if (sender === 'user') {
-      messageDiv.appendChild(content);
-      messageDiv.appendChild(avatar);
-    } else {
-      messageDiv.appendChild(avatar);
-      messageDiv.appendChild(content);
-    }
-
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(content);
     this.chatBody.appendChild(messageDiv);
     this.chatBody.scrollTop = this.chatBody.scrollHeight;
   }
@@ -221,36 +110,15 @@ class Chat {
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/```(\w+)\n([\s\S]*?)```/g, (match, lang, code) => {
-        return `<pre><code class="language-${lang}">${code}</code></pre>`;
-      });
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
   }
 
-  clearChat() {
-    while (this.chatBody.firstChild) {
-      this.chatBody.firstChild.remove();
+  loadAvatar() {
+    const savedAvatar = localStorage.getItem('userAvatar');
+    if (savedAvatar) {
+      const avatarElement = document.querySelector('.avatar img');
+      avatarElement.src = savedAvatar;
     }
-
-    const welcomeContainer = document.createElement('div');
-    welcomeContainer.className = 'welcome-container';
-    welcomeContainer.id = 'welcome-message';
-    welcomeContainer.innerHTML = `
-      <h1 class="welcome-text">Hello! I'm gitSource, your AI assistant.</h1>
-      <p class="welcome-subtext">How can I help you today?</p>
-    `;
-    this.chatBody.appendChild(welcomeContainer);
-    this.welcomeMessage = welcomeContainer;
-  }
-
-  toggleTheme() {
-    document.body.classList.toggle('light-theme');
-    localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-  }
-
-  loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.classList.toggle('light-theme', savedTheme === 'light');
   }
 }
 
