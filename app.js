@@ -1,6 +1,6 @@
 const CONFIG = {
   API_ENDPOINT: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
-  API_KEY: 'ADD_YOUR_API_KEY',
+  API_KEY: 'AIzaSyBOne70LWP0NqTyX2QrmtEfXh2BkQMkscU',
   MAX_CHARS: 2000
 };
 
