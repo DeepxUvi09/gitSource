@@ -24,6 +24,19 @@ body {
   overflow: hidden;
 }
 
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#bot-name {
+  font-size: 28px;
+  font-weight: 600;
+  color: #0095f6;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
 #chat-body {
   flex-grow: 1;
   overflow-y: auto;
@@ -122,8 +135,7 @@ body {
   fill: #0095f6;
 }
 
-#clear-button,
-#theme-toggle {
+#clear-button {
   background-color: #555;
   color: white;
   padding: 14px 20px;
@@ -134,14 +146,9 @@ body {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-#clear-button:hover,
-#theme-toggle:hover {
+#clear-button:hover {
   background-color: #0095f6;
   transform: scale(1.05);
-}
-
-#clear-button {
-  margin-top: 30px;
 }
 
 .prompt-chips {
@@ -165,12 +172,12 @@ body {
   color: white;
 }
 
-.welcome-container {
+#welcome-message {
   text-align: center;
   padding: 25px;
 }
 
-#welcome-message h1 {
+#welcome-message h2 {
   font-size: 32px;
   margin: 0;
   color: #fff;
@@ -180,54 +187,6 @@ body {
   font-size: 18px;
   margin: 12px 0 0;
   color: #bbb;
-}
-
-#theme-toggle {
-  background-color: #666;
-}
-
-#theme-toggle:hover {
-  background-color: #777;
-}
-
-body.light-theme {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-body.light-theme #chat-container {
-  background-color: #fff;
-}
-
-body.light-theme .message .message-content {
-  background-color: #f1f1f1;
-  color: #333;
-}
-
-body.light-theme .user-message .message-content {
-  background-color: #0095f6;
-}
-
-body.light-theme .ai-message .message-content {
-  background-color: #f1f1f1;
-  color: #333;
-}
-
-body.light-theme #chat-input {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-}
-
-body.light-theme #send-button {
-  background-color: #0095f6;
-  color: white;
-}
-
-body.light-theme #clear-button,
-body.light-theme #theme-toggle {
-  background-color: #ddd;
-  color: #333;
 }
 
 #avatar-preview img {
