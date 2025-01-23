@@ -10,6 +10,7 @@ class Chat {
     this.setupListeners();
     this.loadTheme();
     this.loadAvatar();
+    this.setupVoiceAssistant(); // Initialize voice assistant
   }
 
   setupElements() {
@@ -22,6 +23,7 @@ class Chat {
     this.clearButton = document.getElementById('clear-button');
     this.avatarUpload = document.getElementById('avatar-upload');
     this.avatarPreview = document.getElementById('avatar-preview');
+    this.voiceAssistantButton = document.getElementById('voice-assistant'); // Voice assistant button
   }
 
   setupListeners() {
@@ -46,6 +48,54 @@ class Chat {
 
     this.clearButton.addEventListener('click', () => this.clearChat());
     this.themeToggle.addEventListener('click', () => this.toggleTheme());
+
+    if (this.voiceAssistantButton) {
+      this.voiceAssistantButton.addEventListener('click', () => this.startVoiceRecognition());
+    }
+  }
+
+  setupVoiceAssistant() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.warn('Speech Recognition API not supported in this browser.');
+      if (this.voiceAssistantButton) {
+        this.voiceAssistantButton.disabled = true;
+      }
+      return;
+    }
+
+    this.recognition = new SpeechRecognition();
+    this.recognition.lang = 'en-US';
+    this.recognition.continuous = false;
+
+    this.recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+      this.chatInput.value = transcript;
+      console.log('Voice recognized:', transcript);
+      this.handleFirstMessage();
+    };
+
+    this.recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      this.addMessage('ai', 'I couldn’t process your voice command. Please try again.');
+    };
+
+    this.recognition.onend = () => {
+      if (this.voiceAssistantButton) {
+        this.voiceAssistantButton.classList.remove('listening');
+      }
+      console.log('Voice recognition stopped.');
+    };
+  }
+
+  startVoiceRecognition() {
+    if (!this.recognition) return;
+
+    this.recognition.start();
+    if (this.voiceAssistantButton) {
+      this.voiceAssistantButton.classList.add('listening');
+    }
+    console.log('Voice recognition started...');
   }
 
   handleFirstMessage() {
