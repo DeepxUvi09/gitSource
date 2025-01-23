@@ -20,12 +20,14 @@ class Chat {
     this.promptChips = document.querySelectorAll('.prompt-chip');
     this.welcomeMessage = document.getElementById('welcome-message');
     this.clearButton = document.getElementById('clear-button');
-    // this.avatarUpload = document.getElementById('avatar-upload');
-    // this.avatarPreview = document.getElementById('avatar-preview');
+    this.avatarUpload = document.getElementById('avatar-upload');
+    this.avatarPreview = document.getElementById('avatar-preview');
   }
 
   setupListeners() {
-    this.avatarUpload.addEventListener('change', (e) => this.handleAvatarUpload(e));
+    if (this.avatarUpload) {
+      this.avatarUpload.addEventListener('change', (e) => this.handleAvatarUpload(e));
+    }
 
     this.sendButton.addEventListener('click', () => this.handleFirstMessage());
     this.chatInput.addEventListener('keydown', (e) => {
@@ -34,7 +36,7 @@ class Chat {
         this.handleFirstMessage();
       }
     });
-    
+
     this.promptChips.forEach(chip => {
       chip.addEventListener('click', () => {
         this.chatInput.value = chip.textContent;
@@ -73,7 +75,9 @@ class Chat {
   }
 
   updateAvatarPreview(avatarData) {
-    this.avatarPreview.innerHTML = `<img src="${avatarData}" alt="User Avatar">`;
+    if (this.avatarPreview) {
+      this.avatarPreview.innerHTML = `<img src="${avatarData}" alt="User Avatar">`;
+    }
   }
 
   loadAvatar() {
@@ -82,8 +86,6 @@ class Chat {
       this.updateAvatarPreview(savedAvatar);
     }
   }
-
-
 
   async sendMessage() {
     const message = this.chatInput.value.trim();
@@ -114,9 +116,7 @@ class Chat {
           'X-Goog-Api-Key': CONFIG.API_KEY
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{ text: message }]
-          }],
+          contents: [{ parts: [{ text: message }] }],
           generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 2048
@@ -125,8 +125,7 @@ class Chat {
       });
 
       const data = await response.json();
-      
-      if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+      if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         return data.candidates[0].content.parts[0].text;
       }
       return null;
@@ -145,13 +144,12 @@ class Chat {
 
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    avatar.style = 'width: 2rem; height: 2rem;';
     
     if (sender === 'user') {
       const savedAvatar = localStorage.getItem('userAvatar');
-      avatar.innerHTML = savedAvatar ? 
-        `<img src="${savedAvatar}" alt="User Avatar">` :
-        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+      avatar.innerHTML = savedAvatar
+        ? `<img src="${savedAvatar}" alt="User Avatar">`
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
     } else {
       avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
     }
@@ -171,36 +169,28 @@ class Chat {
   formatMessage(text) {
     return text
       .replace(/\n/g, '<br>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') 
-      .replace(/`([^`]+)`/g, '<code>$1</code>') 
-      .replace(/```(\w+)\n([\s\S]*?)```/g, (match, lang, code) => { 
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/```(\w+)\n([\s\S]*?)```/g, (match, lang, code) => {
         return `<pre><code class="language-${lang}">${code}</code></pre>`;
       });
   }
-  
 
   clearChat() {
-    const messages = this.chatBody.querySelectorAll('.message');
-    messages.forEach(msg => {
-      msg.classList.add('fade-out');
-    });
-    
-    setTimeout(() => {
-      while (this.chatBody.firstChild) {
-        this.chatBody.firstChild.remove();
-      }
-      
-      const welcomeContainer = document.createElement('div');
-      welcomeContainer.className = 'welcome-container';
-      welcomeContainer.id = 'welcome-message';
-      welcomeContainer.innerHTML = `
-        <h1 class="welcome-text">Hello! I'm gitSource, your AI assistant.</h1>
-        <p class="welcome-subtext">How can I help you today?</p>
-      `;
-      this.chatBody.appendChild(welcomeContainer);
-      this.welcomeMessage = welcomeContainer;
-    }, 500);
+    while (this.chatBody.firstChild) {
+      this.chatBody.firstChild.remove();
+    }
+
+    const welcomeContainer = document.createElement('div');
+    welcomeContainer.className = 'welcome-container';
+    welcomeContainer.id = 'welcome-message';
+    welcomeContainer.innerHTML = `
+      <h1 class="welcome-text">Hello! I'm gitSource, your AI assistant.</h1>
+      <p class="welcome-subtext">How can I help you today?</p>
+    `;
+    this.chatBody.appendChild(welcomeContainer);
+    this.welcomeMessage = welcomeContainer;
   }
 
   toggleTheme() {
